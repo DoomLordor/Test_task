@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Data_view.apps.DataViewConfig',
+    'Test_task',
 ]
 
 MIDDLEWARE = [
