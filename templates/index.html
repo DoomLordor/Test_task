@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Обзор Данных</title>
+</head>
+<body>
+{% for data in data_list %}
+    <div>{{ data.id_institutions }} {{ data.name_institutions }}</div>
+
+{% endfor %}
+</body>
+</html>
