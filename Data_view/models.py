@@ -8,22 +8,37 @@
 from django.db import models
 
 
-class Data(models.Model):
-    budget_level = models.TextField()
-    id_institutions = models.IntegerField(primary_key=True)
-    name_institutions = models.TextField()
-    inn = models.TextField(db_column='INN')
-    kpp = models.TextField(db_column='KPP')
-    type_institutions = models.TextField()
-    type_organizations = models.TextField()
-    status_egrul = models.TextField(db_column='status_EGRUL')
-    status_rybpnybp = models.TextField(db_column='status_RYBPNYBP')
-    code_head_by_bk = models.TextField(db_column='code_head_by_BK')
-    name_head_by_bk = models.TextField(db_column='name_head_by_BK')
-    industry_specific_typing = models.TextField(db_column='Industry-specific_typing')
+class HeadByBK(models.Model):
+    """Модель базы с кодами по БК и их названиями"""
+    id = models.IntegerField('id', primary_key=True)
+    code_head_by_bk = models.CharField('Код главы по БК', db_column='code_head_by_BK', max_length=3)
+    name_head_by_bk = models.TextField('Наименование главы по БК', db_column='name_head_by_BK')
 
     class Meta:
-        managed = False
+        ordering = ['id']
+        managed = True
+        db_table = 'head_by_bk'
+        unique_together = ('id',)
+
+
+class Data(models.Model):
+    """Модель базы с обзорными данными"""
+    budget_level = models.TextField('Уровень бюджета')
+    id_institutions = models.IntegerField('Код учреждения', primary_key=True)
+    name_institutions = models.TextField('Наименование организации')
+    inn = models.CharField('ИНН', db_column='INN', max_length=10)
+    kpp = models.CharField('КПП', db_column='KPP', max_length=9)
+    type_institutions = models.TextField('Тип учреждения')
+    type_organizations = models.TextField('Тип организации')
+    status_egrul = models.TextField('Статус ЕГРЮЛ', db_column='status_EGRUL')
+    status_rybpnybp = models.TextField('Статус РУБПНУБП', db_column='status_RYBPNYBP')
+    id_head_by_bk = models.ForeignKey(HeadByBK, on_delete=models.CASCADE, verbose_name='')
+    industry_specific_typing = models.TextField('Отраслевая типизация',
+                                                db_column='Industry-specific_typing')
+
+    class Meta:
+        ordering = ['id_institutions']
+        managed = True
         db_table = 'data'
         unique_together = (('id_institutions', 'name_institutions', 'inn'),)
 
