@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Data_view.apps.DataViewConfig',
     'Test_task',
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
