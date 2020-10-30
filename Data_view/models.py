@@ -8,6 +8,88 @@
 from django.db import models
 
 
+class TypeInstitutions(models.Model):
+    """Модель базы со справочником Типов учереждения"""
+    id = models.IntegerField('id', primary_key=True)
+    outside_id = models.IntegerField('outside_id')
+    type_institutions = models.TextField('Тип учреждения')
+
+    class Meta:
+        ordering = ['id']
+        managed = True
+        db_table = 'type_institutions_manual'
+        unique_together = ('id', 'outside_id')
+        verbose_name = 'Тип учреждения'
+
+
+class TypeOrganizations(models.Model):
+    """Модель базы со справочником Типов организаций"""
+    id = models.IntegerField('id', primary_key=True)
+    outside_id = models.IntegerField('outside_id')
+    type_organizations = models.TextField('Тип организации')
+
+    class Meta:
+        ordering = ['id']
+        managed = True
+        db_table = 'type_organizations_manual'
+        unique_together = ('id', 'outside_id')
+        verbose_name = 'Тип организации'
+
+
+class StatusEGRUL(models.Model):
+    """Модель базы со справочником статусов ЕГРУЛ"""
+    id = models.IntegerField('id', primary_key=True)
+    outside_id = models.IntegerField('outside_id')
+    status_egrul = models.TextField('Статус ЕГРЮЛ', db_column='status_EGRUL')
+
+    class Meta:
+        ordering = ['id']
+        managed = True
+        db_table = 'status_egrul_manual'
+        unique_together = ('id', 'outside_id')
+        verbose_name = 'Статус ЕГРЮЛ'
+
+
+class StatusRYBPNYBP(models.Model):
+    """Модель базы со справочником статусами РУБПНУБП"""
+    id = models.IntegerField('id', primary_key=True)
+    outside_id = models.IntegerField('outside_id')
+    status_rybpnybp = models.TextField('Статус РУБПНУБП', db_column='status_RYBPNYBP')
+
+    class Meta:
+        ordering = ['id']
+        managed = True
+        db_table = 'status_rybpnybp_manual'
+        unique_together = ('id', 'outside_id')
+        verbose_name = 'Статус РУБПНУБП'
+
+
+class IndustrySpecificTyping(models.Model):
+    """Модель базы со справочником Отраслевых типизаций"""
+    id = models.IntegerField('id', primary_key=True)
+    industry_specific_typing = models.TextField('Отраслевая типизация',
+                                                db_column='industry_specific_typing')
+
+    class Meta:
+        ordering = ['id']
+        managed = True
+        db_table = 'industry_specific_typing_manual'
+        unique_together = ('id', )
+        verbose_name = ' Отраслевая типизация'
+
+
+class BudgetLevel(models.Model):
+    id = models.IntegerField('id', primary_key=True)
+    budget_level = models.TextField('Уровень бюджета')
+
+    class Meta:
+        ordering = ['id']
+        managed = True
+        db_table = 'budget_level'
+        unique_together = ('id',)
+        verbose_name = 'Уровнь бюджета'
+
+
 class HeadByBK(models.Model):
     """Модель базы с кодами по БК и их названиями"""
     id = models.IntegerField('id', primary_key=True)
@@ -17,24 +99,27 @@ class HeadByBK(models.Model):
     class Meta:
         ordering = ['id']
         managed = True
-        db_table = 'head_by_bk'
+        db_table = 'head_by_bk_manual'
         unique_together = ('id',)
+        verbose_name = 'Глава по БК'
 
 
 class Data(models.Model):
     """Модель базы с обзорными данными"""
-    budget_level = models.TextField('Уровень бюджета')
     id_institutions = models.IntegerField('Код учреждения', primary_key=True)
     name_institutions = models.TextField('Наименование организации')
     inn = models.CharField('ИНН', db_column='INN', max_length=10)
     kpp = models.CharField('КПП', db_column='KPP', max_length=9)
-    type_institutions = models.TextField('Тип учреждения')
-    type_organizations = models.TextField('Тип организации')
-    status_egrul = models.TextField('Статус ЕГРЮЛ', db_column='status_EGRUL')
-    status_rybpnybp = models.TextField('Статус РУБПНУБП', db_column='status_RYBPNYBP')
-    id_head_by_bk = models.ForeignKey(HeadByBK, on_delete=models.CASCADE, verbose_name='')
-    industry_specific_typing = models.TextField('Отраслевая типизация',
-                                                db_column='Industry-specific_typing')
+    budget_level = models.ForeignKey(BudgetLevel, on_delete=models.CASCADE, verbose_name='Код уровня бюджета')
+    type_institutions = models.ForeignKey(TypeInstitutions, on_delete=models.CASCADE,
+                                             verbose_name='Код типа учреждения')
+    type_organizations = models.ForeignKey(TypeOrganizations, on_delete=models.CASCADE,
+                                           verbose_name='Код типа организации')
+    status_egrul = models.ForeignKey(StatusEGRUL, on_delete=models.CASCADE, verbose_name='Код статуса ЕГРЮЛ')
+    status_rybpnybp = models.ForeignKey(StatusRYBPNYBP, on_delete=models.CASCADE, verbose_name='Код статуса РУБПНУБП')
+    industry_specific_typing = models.ForeignKey(IndustrySpecificTyping, on_delete=models.CASCADE,
+                                                    verbose_name='Код отраслевой типизации')
+    head_by_bk = models.ForeignKey(HeadByBK, on_delete=models.CASCADE, verbose_name='Код уровня бюджета')
 
     class Meta:
         ordering = ['id_institutions']
