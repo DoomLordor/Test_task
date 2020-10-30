@@ -1,9 +1,9 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
+from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Data, HeadByBK
 from .serializers import DataSerializers, HeadByBKSerializers
-from .service import PaginationData, DataFilter, DataPermissions, HeadByBKFilter, HeadByBKPermissions
 
 
 class DataRest(viewsets.ModelViewSet):
