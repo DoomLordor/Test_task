@@ -2,25 +2,7 @@ from rest_framework import serializers
 
 from .models import (Data, HeadByBK, TypeInstitutions,
                      TypeOrganizations, StatusEGRUL,
-                     StatusRYBPNYBP, IndustrySpecificTyping, BudgetLevel)
-
-bl = {0: 'Не определен',
-      1: 'Федеральный бюджет',
-      2: 'Бюджет муниципального района',
-      3: 'Местный бюджет',
-      4: 'Бюджет городского округа',
-      5: 'Бюджет муниципального района',
-      6: 'Бюджет городского поселения',
-      7: 'Бюджет сельского поселения',
-      8: 'Бюджет государственного внебюджетного фонда Российской Федерации',
-      9: 'Бюджет Пенсионного фонда Российской Федерации',
-      10: 'Бюджет Фонда социального страхования Российской Федерации',
-      11: 'Бюджет Федерального фонда обязательного медицинского страхования',
-      12: 'Бюджет территориального государственного внебюджетного фонда',
-      13: 'Бюджет городского округа с внутригородским делением',
-      14: 'Бюджет внутригородского муниципального'
-          ' образования города федерального значения',
-      15: 'Бюджет внутригородского района'}
+                     StatusRYBPNYBP, IndustrySpecificTyping)
 
 
 class TypeInstitutionsSerializers(serializers.ModelSerializer):
@@ -63,14 +45,6 @@ class IndustrySpecificTypingSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BudgetLevelSerializers(serializers.ModelSerializer):
-    """Уровень бюджета"""
-
-    class Meta:
-        model = BudgetLevel
-        fields = '__all__'
-
-
 class HeadByBKSerializers(serializers.ModelSerializer):
     """Коды по бк"""
 
@@ -81,7 +55,6 @@ class HeadByBKSerializers(serializers.ModelSerializer):
 
 class DataSerializers(serializers.ModelSerializer):
     """Обзор данных"""
-    budget_level = serializers.SlugRelatedField(slug_field='budget_level', queryset=BudgetLevel.objects.all())
 
     type_institutions = serializers.SlugRelatedField(slug_field='type_institutions',
                                                         queryset=TypeInstitutions.objects.all())

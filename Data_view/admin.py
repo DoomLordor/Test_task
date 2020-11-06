@@ -11,5 +11,3 @@ admin.site.register(TypeOrganizations)
 admin.site.register(StatusEGRUL)
 admin.site.register(StatusRYBPNYBP)
 admin.site.register(IndustrySpecificTyping)
-admin.site.register(BudgetLevel)
-

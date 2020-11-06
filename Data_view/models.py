@@ -79,15 +79,10 @@ class IndustrySpecificTyping(models.Model):
 
 
 class BudgetLevel(models.Model):
-    id = models.IntegerField('id', primary_key=True)
-    budget_level = models.TextField('Уровень бюджета')
-
-    class Meta:
-        ordering = ['id']
-        managed = True
-        db_table = 'budget_level'
         unique_together = ('id',)
-        verbose_name = 'Уровнь бюджета'
+        verbose_name = 'Наименование отраслевой типизации'
+
+
 
 
 class HeadByBK(models.Model):
@@ -111,9 +106,9 @@ class Data(models.Model):
     inn = models.CharField('ИНН', db_column='INN', max_length=10)
     kpp = models.CharField('КПП', db_column='KPP', max_length=9)
     budget_level = models.ForeignKey(BudgetLevel, on_delete=models.CASCADE, verbose_name='Код уровня бюджета')
-    type_institutions = models.ForeignKey(TypeInstitutions, on_delete=models.CASCADE,
                                              verbose_name='Код типа учреждения')
     type_organizations = models.ForeignKey(TypeOrganizations, on_delete=models.CASCADE,
+    budget_level = models.IntegerField(choices=BudgetLevel.choices, default=BudgetLevel.not_defined)
                                            verbose_name='Код типа организации')
     status_egrul = models.ForeignKey(StatusEGRUL, on_delete=models.CASCADE, verbose_name='Код статуса ЕГРЮЛ')
     status_rybpnybp = models.ForeignKey(StatusRYBPNYBP, on_delete=models.CASCADE, verbose_name='Код статуса РУБПНУБП')

@@ -52,11 +52,4 @@ urlpatterns = [
                                                                                        'patch': 'partial_update',
                                                                                        'delete': 'destroy'})),
 
-    path('BudgetLevel/', views.BudgetLevelRest.as_view({'get': 'list', 'post': 'create'})),
-
-    path('BudgetLevel/<int:pk>/', views.BudgetLevelRest.as_view({'get': 'retrieve',
-                                                                 'put': 'update',
-                                                                 'patch': 'partial_update',
-                                                                 'delete': 'destroy'})),
-
 ]

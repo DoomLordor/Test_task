@@ -6,10 +6,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import (DataSerializers, HeadByBKSerializers, TypeInstitutionsSerializers,
                           TypeOrganizationsSerializers, StatusEGRULSerializers,
-                          StatusRYBPNYBPSerializers, IndustrySpecificTypingSerializers, BudgetLevelSerializers)
+                          StatusRYBPNYBPSerializers, IndustrySpecificTypingSerializers)
 from .models import (Data, HeadByBK, TypeInstitutions,
                      TypeOrganizations, StatusEGRUL,
-                     StatusRYBPNYBP, IndustrySpecificTyping, BudgetLevel)
+                     StatusRYBPNYBP, IndustrySpecificTyping)
 
 comparison = {'GET': 'view', 'POST': 'add', 'PUT': 'change', 'PATCH': 'CHANGE', 'DELETE': 'delete', 'OPTIONS': 'view',
               'HEAD': 'view'}
@@ -87,15 +87,6 @@ class IndustrySpecificTypingFilter(filters.FilterSet):
         model = IndustrySpecificTyping
         fields = '__all__'
 
-
-class BudgetLevelFilter(filters.FilterSet):
-    """Фильтры для уровней бюджета"""
-
-    class Meta:
-        model = BudgetLevel
-        fields = '__all__'
-
-
 # filters
 
 # Permissions
@@ -146,14 +137,6 @@ class IndustrySpecificTypingPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_industryspecifictyping")
-
-
-class BudgetLevelPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для кодов по бк"""
-
-    def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_budgetlevel")
-
 
 # Permissions
 
@@ -219,14 +202,5 @@ class IndustrySpecificTypingRest(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IndustrySpecificTypingFilter
     permission_classes = (IndustrySpecificTypingPermissions,)
-
-
-class BudgetLevelRest(viewsets.ModelViewSet):
-    queryset = BudgetLevel.objects.all()
-    serializer_class = BudgetLevelSerializers
-    pagination_class = PaginationData
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = BudgetLevelFilter
-    permission_classes = (BudgetLevelPermissions,)
 
 # REST
