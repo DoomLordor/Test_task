@@ -56,21 +56,17 @@ class HeadByBKSerializers(serializers.ModelSerializer):
 class DataSerializers(serializers.ModelSerializer):
     """Обзор данных"""
 
-    type_institutions = serializers.SlugRelatedField(slug_field='type_institutions',
-                                                        queryset=TypeInstitutions.objects.all())
+    type_institutions = TypeInstitutionsSerializers()
 
-    type_organizations = serializers.SlugRelatedField(slug_field='type_organizations',
-                                                         queryset=TypeOrganizations.objects.all())
+    type_organizations = TypeOrganizationsSerializers()
 
-    status_egrul = serializers.SlugRelatedField(slug_field='status_egrul', queryset=StatusEGRUL.objects.all())
+    status_egrul = StatusEGRULSerializers()
 
-    status_rybpnybp = serializers.SlugRelatedField(slug_field='status_rybpnybp',
-                                                      queryset=StatusRYBPNYBP.objects.all())
+    status_rybpnybp = StatusRYBPNYBPSerializers()
 
-    industry_specific_typing = serializers.SlugRelatedField(slug_field='industry_specific_typing',
-                                                               queryset=IndustrySpecificTyping.objects.all())
+    industry_specific_typing = IndustrySpecificTypingSerializers()
 
-    head_by_bk = serializers.SlugRelatedField(slug_field='name_head_by_bk', queryset=HeadByBK.objects.all())
+    head_by_bk = HeadByBKSerializers()
 
     class Meta:
         model = Data
