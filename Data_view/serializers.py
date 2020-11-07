@@ -6,7 +6,7 @@ from .models import (Data, HeadByBK, TypeInstitutions,
 
 
 class TypeInstitutionsSerializers(serializers.ModelSerializer):
-    """Тип учереждения"""
+    """Сериализатор типа учереждения"""
 
     class Meta:
         model = TypeInstitutions
@@ -14,7 +14,7 @@ class TypeInstitutionsSerializers(serializers.ModelSerializer):
 
 
 class TypeOrganizationsSerializers(serializers.ModelSerializer):
-    """Тип учереждения"""
+    """Сериализатор типа учереждения"""
 
     class Meta:
         model = TypeOrganizations
@@ -22,7 +22,7 @@ class TypeOrganizationsSerializers(serializers.ModelSerializer):
 
 
 class StatusEGRULSerializers(serializers.ModelSerializer):
-    """Статус ЕГРУЛ"""
+    """Сериализатор статуса ЕГРУЛ"""
 
     class Meta:
         model = StatusEGRUL
@@ -30,7 +30,7 @@ class StatusEGRULSerializers(serializers.ModelSerializer):
 
 
 class StatusRYBPNYBPSerializers(serializers.ModelSerializer):
-    """Статус РУБПНУBП"""
+    """Сериализатор статуса РУБПНУBП"""
 
     class Meta:
         model = StatusRYBPNYBP
@@ -38,7 +38,7 @@ class StatusRYBPNYBPSerializers(serializers.ModelSerializer):
 
 
 class IndustrySpecificTypingSerializers(serializers.ModelSerializer):
-    """Отраслевая типизация"""
+    """Сериализатор отраслевая типизации"""
 
     class Meta:
         model = IndustrySpecificTyping
