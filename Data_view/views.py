@@ -149,6 +149,10 @@ class DataRest(viewsets.ModelViewSet):
     filterset_class = DataFilter
     permission_classes = (DataPermissions,)
 
+    def list(self, request, *args, **kwargs):
+        if request.GET.get('paginate') is not None:
+            self.pagination_class.page_size = request.GET.get('paginate')
+        return super().list(request, *args, **kwargs)
 
 class HeadByBKRest(viewsets.ModelViewSet):
     queryset = HeadByBK.objects.all()
