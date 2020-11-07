@@ -39,7 +39,6 @@ class StatusEGRUL(models.Model):
     name_status = models.TextField('Статус ЕГРЮЛ')
 
     class Meta:
-        ordering = ['id']
         managed = True
         db_table = 'status_egrul_manual'
         unique_together = ('id', 'outside_id')
