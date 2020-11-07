@@ -12,7 +12,7 @@ class TypeInstitutions(models.Model):
     """Модель базы со справочником Типов учереждения"""
 
     outside_id = models.IntegerField('outside_id')
-    name = models.TextField('Тип учреждения')
+    name_type = models.TextField('Тип учреждения')
 
     class Meta:
         managed = True
@@ -24,7 +24,7 @@ class TypeInstitutions(models.Model):
 class TypeOrganizations(models.Model):
     """Модель базы со справочником Типов организаций"""
     outside_id = models.IntegerField('outside_id')
-    name = models.TextField('Тип организации')
+    name_type = models.TextField('Тип организации')
 
     class Meta:
         managed = True
@@ -36,7 +36,7 @@ class TypeOrganizations(models.Model):
 class StatusEGRUL(models.Model):
     """Модель базы со справочником статусов ЕГРУЛ"""
     outside_id = models.IntegerField('outside_id')
-    name = models.TextField('Статус ЕГРЮЛ')
+    name_status = models.TextField('Статус ЕГРЮЛ')
 
     class Meta:
         ordering = ['id']
@@ -49,7 +49,7 @@ class StatusEGRUL(models.Model):
 class StatusRYBPNYBP(models.Model):
     """Модель базы со справочником статусами РУБПНУБП"""
     outside_id = models.IntegerField('outside_id')
-    name = models.TextField('Статус РУБПНУБП')
+    name_status = models.TextField('Статус РУБПНУБП')
 
     class Meta:
         managed = True
@@ -60,7 +60,7 @@ class StatusRYBPNYBP(models.Model):
 
 class IndustrySpecificTyping(models.Model):
     """Модель базы со справочником Отраслевых типизаций"""
-    name = models.TextField('Отраслевая типизация')
+    name_typing = models.TextField('Отраслевая типизация')
 
     class Meta:
         managed = True
