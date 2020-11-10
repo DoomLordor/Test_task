@@ -8,7 +8,7 @@
 from django.db import models
 
 
-class TypeInstitutions(models.Model):
+class TypeInstitution(models.Model):
     """Модель базы со справочником Типов учереждения"""
 
     outside_id = models.IntegerField('outside_id')
@@ -21,7 +21,7 @@ class TypeInstitutions(models.Model):
         verbose_name = 'Наименование типа учреждения'
 
 
-class TypeOrganizations(models.Model):
+class TypeOrganization(models.Model):
     """Модель базы со справочником Типов организаций"""
     outside_id = models.IntegerField('outside_id')
     name_type = models.TextField('Тип организации')
@@ -101,7 +101,7 @@ class HeadByBK(models.Model):
         verbose_name = 'Наименование главы по БК'
 
 
-class Data(models.Model):
+class CharacteristicsOrganization(models.Model):
     """Модель базы с обзорными данными"""
     id_institutions = models.IntegerField('Код учреждения', primary_key=True)
 
@@ -113,10 +113,10 @@ class Data(models.Model):
 
     budget_level = models.IntegerField(choices=BudgetLevel.choices, default=BudgetLevel.not_defined)
 
-    type_institutions = models.ForeignKey(TypeInstitutions, on_delete=models.PROTECT,
+    type_institutions = models.ForeignKey(TypeInstitution, on_delete=models.PROTECT,
                                           verbose_name='Код типа учреждения')
 
-    type_organizations = models.ForeignKey(TypeOrganizations, on_delete=models.PROTECT,
+    type_organizations = models.ForeignKey(TypeOrganization, on_delete=models.PROTECT,
                                            verbose_name='Код типа организации')
 
     status_egrul = models.ForeignKey(StatusEGRUL, on_delete=models.PROTECT, verbose_name='Код статуса ЕГРЮЛ')
@@ -131,7 +131,7 @@ class Data(models.Model):
     class Meta:
         ordering = ['id_institutions']
         managed = True
-        db_table = 'data'
+        db_table = 'characteristics_organization'
         unique_together = (('id_institutions', 'name_institutions', 'inn'),)
 
     def __str__(self):

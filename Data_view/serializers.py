@@ -1,27 +1,28 @@
 from rest_framework import serializers
 
-from .models import (Data, HeadByBK, TypeInstitutions,
-                     TypeOrganizations, StatusEGRUL,
+
+from .models import (CharacteristicsOrganization, HeadByBK, TypeInstitution,
+                     TypeOrganization, StatusEGRUL,
                      StatusRYBPNYBP, IndustrySpecificTyping, BudgetLevel)
 
 
-class TypeInstitutionsSerializers(serializers.ModelSerializer):
+class TypeInstitutionSerializer(serializers.ModelSerializer):
     """Сериализатор типа учереждения"""
 
     class Meta:
-        model = TypeInstitutions
+        model = TypeInstitution
         fields = '__all__'
 
 
-class TypeOrganizationsSerializers(serializers.ModelSerializer):
+class TypeOrganizationSerializer(serializers.ModelSerializer):
     """Сериализатор типа учереждения"""
 
     class Meta:
-        model = TypeOrganizations
+        model = TypeOrganization
         fields = '__all__'
 
 
-class StatusEGRULSerializers(serializers.ModelSerializer):
+class StatusEGRULSerializer(serializers.ModelSerializer):
     """Сериализатор статуса ЕГРУЛ"""
 
     class Meta:
@@ -29,7 +30,7 @@ class StatusEGRULSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class StatusRYBPNYBPSerializers(serializers.ModelSerializer):
+class StatusRYBPNYBPSerializer(serializers.ModelSerializer):
     """Сериализатор статуса РУБПНУBП"""
 
     class Meta:
@@ -37,7 +38,7 @@ class StatusRYBPNYBPSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class IndustrySpecificTypingSerializers(serializers.ModelSerializer):
+class IndustrySpecificTypingSerializer(serializers.ModelSerializer):
     """Сериализатор отраслевая типизации"""
 
     class Meta:
@@ -45,7 +46,7 @@ class IndustrySpecificTypingSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class HeadByBKSerializers(serializers.ModelSerializer):
+class HeadByBKSerializer(serializers.ModelSerializer):
     """Коды по бк"""
 
     class Meta:
@@ -53,25 +54,25 @@ class HeadByBKSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DataSerializers(serializers.ModelSerializer):
+class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
     """Обзор данных"""
 
     budget_level = serializers.CharField(source='get_budget_level_display')
 
-    type_institutions = TypeInstitutionsSerializers()
+    type_institutions = TypeInstitutionSerializer()
 
-    type_organizations = TypeOrganizationsSerializers()
+    type_organizations = TypeOrganizationSerializer()
 
-    status_egrul = StatusEGRULSerializers()
+    status_egrul = StatusEGRULSerializer()
 
-    status_rybpnybp = StatusRYBPNYBPSerializers()
+    status_rybpnybp = StatusRYBPNYBPSerializer()
 
-    industry_specific_typing = IndustrySpecificTypingSerializers()
+    industry_specific_typing = IndustrySpecificTypingSerializer()
 
-    head_by_bk = HeadByBKSerializers()
+    head_by_bk = HeadByBKSerializer()
 
     class Meta:
-        model = Data
+        model = CharacteristicsOrganization
         fields = '__all__'
 
     def create(self, validated_data):

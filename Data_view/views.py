@@ -4,14 +4,14 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import (DataSerializers, HeadByBKSerializers, TypeInstitutionsSerializers,
-                          TypeOrganizationsSerializers, StatusEGRULSerializers,
-                          StatusRYBPNYBPSerializers, IndustrySpecificTypingSerializers)
-from .models import (Data, HeadByBK, TypeInstitutions,
-                     TypeOrganizations, StatusEGRUL,
+from .serializers import (CharacteristicsOrganizationSerializer, HeadByBKSerializer, TypeInstitutionSerializer,
+                          TypeOrganizationSerializer, StatusEGRULSerializer,
+                          StatusRYBPNYBPSerializer, IndustrySpecificTypingSerializer)
+from .models import (CharacteristicsOrganization, HeadByBK, TypeInstitution,
+                     TypeOrganization, StatusEGRUL,
                      StatusRYBPNYBP, IndustrySpecificTyping)
 
-comparison = {'GET': 'view', 'POST': 'add', 'PUT': 'change', 'PATCH': 'CHANGE', 'DELETE': 'delete', 'OPTIONS': 'view',
+COMPARISON = {'GET': 'view', 'POST': 'add', 'PUT': 'change', 'PATCH': 'CHANGE', 'DELETE': 'delete', 'OPTIONS': 'view',
               'HEAD': 'view'}
 
 
@@ -20,7 +20,7 @@ class PaginationData(PageNumberPagination):
 
 
 # filters
-class DataFilter(filters.FilterSet):
+class CharacteristicsOrganizationFilter(filters.FilterSet):
     """Фильтры для обзорных данных"""
 
     id_institutions = filters.NumberFilter()
@@ -36,7 +36,7 @@ class DataFilter(filters.FilterSet):
     budget_level = filters.NumberFilter()
 
     class Meta:
-        model = Data
+        model = CharacteristicsOrganization
         fields = '__all__'
 
 
@@ -48,19 +48,19 @@ class HeadByBKFilter(filters.FilterSet):
         fields = '__all__'
 
 
-class TypeInstitutionsFilter(filters.FilterSet):
+class TypeInstitutionFilter(filters.FilterSet):
     """Фильтры для типов учреждений"""
 
     class Meta:
-        model = TypeInstitutions
+        model = TypeInstitution
         fields = '__all__'
 
 
-class TypeOrganizationsFilter(filters.FilterSet):
+class TypeOrganizationFilter(filters.FilterSet):
     """Фильтры для типов организаций"""
 
     class Meta:
-        model = TypeOrganizations
+        model = TypeOrganization
         fields = '__all__'
 
 
@@ -90,64 +90,64 @@ class IndustrySpecificTypingFilter(filters.FilterSet):
 # filters
 
 # Permissions
-class DataPermissions(permissions.BasePermission):
+class CharacteristicsOrganizationPermissions(permissions.BasePermission):
     """Проверка прав пользователя для обзорных данных"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_data")
+        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_characteristicsorganization")
 
 
 class HeadByBKPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_headbybk")
+        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_headbybk")
 
 
-class TypeInstitutionsPermissions(permissions.BasePermission):
+class TypeInstitutionPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_typeinstitutions")
+        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_typeinstitutions")
 
 
-class TypeOrganizationsPermissions(permissions.BasePermission):
+class TypeOrganizationPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_typeorganizations")
+        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_typeorganizations")
 
 
 class StatusEGRULPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_statusegrul")
+        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_statusegrul")
 
 
 class StatusRYBPNYBPPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_status_rybpnybp")
+        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_status_rybpnybp")
 
 
 class IndustrySpecificTypingPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{comparison.get(request.method)}_industryspecifictyping")
+        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_industryspecifictyping")
 
 # Permissions
 
 # REST
-class DataRest(viewsets.ModelViewSet):
-    queryset = Data.objects.all()
-    serializer_class = DataSerializers
+class CharacteristicsOrganizationRest(viewsets.ModelViewSet):
+    queryset = CharacteristicsOrganization.objects.all()
+    serializer_class = CharacteristicsOrganizationSerializer
     pagination_class = PaginationData
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = DataFilter
-    permission_classes = (DataPermissions,)
+    filterset_class = CharacteristicsOrganizationFilter
+    permission_classes = (CharacteristicsOrganizationPermissions,)
 
     def list(self, request, *args, **kwargs):
         if request.GET.get('paginate') is not None:
@@ -156,34 +156,34 @@ class DataRest(viewsets.ModelViewSet):
 
 class HeadByBKRest(viewsets.ModelViewSet):
     queryset = HeadByBK.objects.all()
-    serializer_class = HeadByBKSerializers
+    serializer_class = HeadByBKSerializer
     pagination_class = PaginationData
     filter_backends = (DjangoFilterBackend,)
     filterset_class = HeadByBKFilter
     permission_classes = (HeadByBKPermissions,)
 
 
-class TypeInstitutionsRest(viewsets.ModelViewSet):
-    queryset = TypeInstitutions.objects.all()
-    serializer_class = TypeInstitutionsSerializers
+class TypeInstitutionRest(viewsets.ModelViewSet):
+    queryset = TypeInstitution.objects.all()
+    serializer_class = TypeInstitutionSerializer
     pagination_class = PaginationData
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = TypeInstitutionsFilter
+    filterset_class = TypeInstitutionFilter
     permission_classes = (HeadByBKPermissions,)
 
 
-class TypeOrganizationsRest(viewsets.ModelViewSet):
-    queryset = TypeOrganizations.objects.all()
-    serializer_class = TypeOrganizationsSerializers
+class TypeOrganizationRest(viewsets.ModelViewSet):
+    queryset = TypeOrganization.objects.all()
+    serializer_class = TypeOrganizationSerializer
     pagination_class = PaginationData
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = TypeOrganizationsFilter
-    permission_classes = (TypeOrganizationsPermissions,)
+    filterset_class = TypeOrganizationFilter
+    permission_classes = (TypeOrganizationPermissions,)
 
 
 class StatusEGRULRest(viewsets.ModelViewSet):
     queryset = StatusEGRUL.objects.all()
-    serializer_class = StatusEGRULSerializers
+    serializer_class = StatusEGRULSerializer
     pagination_class = PaginationData
     filter_backends = (DjangoFilterBackend,)
     filterset_class = StatusEGRULFilter
@@ -192,7 +192,7 @@ class StatusEGRULRest(viewsets.ModelViewSet):
 
 class StatusRYBPNYBPRest(viewsets.ModelViewSet):
     queryset = StatusRYBPNYBP.objects.all()
-    serializer_class = StatusRYBPNYBPSerializers
+    serializer_class = StatusRYBPNYBPSerializer
     pagination_class = PaginationData
     filter_backends = (DjangoFilterBackend,)
     filterset_class = StatusRYBPNYBPFilter
@@ -201,7 +201,7 @@ class StatusRYBPNYBPRest(viewsets.ModelViewSet):
 
 class IndustrySpecificTypingRest(viewsets.ModelViewSet):
     queryset = IndustrySpecificTyping.objects.all()
-    serializer_class = IndustrySpecificTypingSerializers
+    serializer_class = IndustrySpecificTypingSerializer
     pagination_class = PaginationData
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IndustrySpecificTypingFilter

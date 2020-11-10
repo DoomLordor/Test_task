@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import (Data, HeadByBK, TypeInstitutions,
+from .models import (CharacteristicsOrganization, HeadByBK, TypeInstitutions,
                      TypeOrganizations, StatusEGRUL,
                      StatusRYBPNYBP, IndustrySpecificTyping, BudgetLevel)
 
 
-admin.site.register(Data)
+admin.site.register(CharacteristicsOrganization)
 admin.site.register(HeadByBK)
 admin.site.register(TypeInstitutions)
 admin.site.register(TypeOrganizations)
