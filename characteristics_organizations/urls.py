@@ -6,8 +6,9 @@ LIST_VIEW_METHODS = {'get': 'list', 'post': 'create'}
 object_OBJECT_VIEW_METHODS = {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}
 
 urlpatterns = [
-    path('Data/', views.CharacteristicsOrganizationRest.as_view(LIST_VIEW_METHODS)),
-    path('Data/<int:pk>/', views.CharacteristicsOrganizationRest.as_view(object_OBJECT_VIEW_METHODS)),
+    path('CharacteristicsOrganization/', views.CharacteristicsOrganizationRest.as_view(LIST_VIEW_METHODS)),
+    path('CharacteristicsOrganization/<int:pk>/',
+         views.CharacteristicsOrganizationRest.as_view(object_OBJECT_VIEW_METHODS)),
 
     path('HeadByBK/', views.HeadByBKRest.as_view(LIST_VIEW_METHODS)),
     path('HeadByBK/<int:pk>/', views.HeadByBKRest.as_view(object_OBJECT_VIEW_METHODS)),

@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Data_view.apps.DataViewConfig',
+    'characteristics_organizations.apps.CharacteristicsOrganizationsConfig',
     'Test_task',
     'rest_framework',
     'django_filters',

@@ -17,7 +17,7 @@ class TypeInstitution(models.Model):
     class Meta:
         managed = True
         db_table = 'type_institutions_manual'
-        unique_together = ('id', 'outside_id')
+        unique_together = ('id', 'outside_id', 'name_type')
         verbose_name = 'Наименование типа учреждения'
 
 
@@ -29,7 +29,7 @@ class TypeOrganization(models.Model):
     class Meta:
         managed = True
         db_table = 'type_organizations_manual'
-        unique_together = ('id', 'outside_id')
+        unique_together = ('id', 'outside_id', 'name_type')
         verbose_name = 'Наименование типа организации'
 
 
@@ -41,7 +41,7 @@ class StatusEGRUL(models.Model):
     class Meta:
         managed = True
         db_table = 'status_egrul_manual'
-        unique_together = ('id', 'outside_id')
+        unique_together = ('id', 'outside_id', 'name_status')
         verbose_name = 'Наименование статуса ЕГРЮЛ'
 
 
@@ -53,7 +53,7 @@ class StatusRYBPNYBP(models.Model):
     class Meta:
         managed = True
         db_table = 'status_rybpnybp_manual'
-        unique_together = ('id', 'outside_id')
+        unique_together = ('id', 'outside_id', 'name_status')
         verbose_name = 'Наименование статуса РУБПНУБП'
 
 
@@ -64,7 +64,7 @@ class IndustrySpecificTyping(models.Model):
     class Meta:
         managed = True
         db_table = 'industry_specific_typing_manual'
-        unique_together = ('id',)
+        unique_together = ('id', 'name_typing')
         verbose_name = 'Наименование отраслевой типизации'
 
 
@@ -97,12 +97,13 @@ class HeadByBK(models.Model):
     class Meta:
         managed = True
         db_table = 'head_by_bk_manual'
-        unique_together = ('id',)
+        unique_together = ('id', 'code_head_by_bk', 'name_head_by_bk')
         verbose_name = 'Наименование главы по БК'
 
 
 class CharacteristicsOrganization(models.Model):
-    """Модель базы с обзорными данными"""
+    """Характеристика организации - набор информации об органицзации (Наименование, ИНН, КПП)
+    и её статусы (тип организации, тип учреждения, статус ЕГРЮЛ и РУБПНУБП"""
     id_institutions = models.IntegerField('Код учреждения', primary_key=True)
 
     name_institutions = models.TextField('Наименование организации')
@@ -133,6 +134,7 @@ class CharacteristicsOrganization(models.Model):
         managed = True
         db_table = 'characteristics_organization'
         unique_together = (('id_institutions', 'name_institutions', 'inn'),)
+        verbose_name = 'Характеристики организации'
 
     def __str__(self):
         return self.name_institutions

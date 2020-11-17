@@ -94,49 +94,60 @@ class CharacteristicsOrganizationPermissions(permissions.BasePermission):
     """Проверка прав пользователя для обзорных данных"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_characteristicsorganization")
+        list_table_names = ['characteristicsorganization', 'headbybk', 'typeinstitutions', 'typeorganizations',
+                            'statusegrul', 'statusrybpnybp', 'industryspecifictyping']
+        if COMPARISON.get(request.method) == 'view':
+            for table_name in list_table_names:
+                if not request.user.has_perm(f"characteristics_organizations.view_{table_name}"):
+                    return False
+            return True
+
+        return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_"
+                                     f"characteristicsorganization")
 
 
 class HeadByBKPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_headbybk")
+        return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_headbybk")
 
 
 class TypeInstitutionPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_typeinstitutions")
+        return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_typeinstitutions")
 
 
 class TypeOrganizationPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_typeorganizations")
+        return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_"
+                                     f"typeorganizations")
 
 
 class StatusEGRULPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_statusegrul")
+        return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_statusegrul")
 
 
 class StatusRYBPNYBPPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_status_rybpnybp")
+        return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_statusrybpnybp")
 
 
 class IndustrySpecificTypingPermissions(permissions.BasePermission):
     """Проверка прав пользователя для кодов по бк"""
 
     def has_permission(self, request, view):
-        return request.user.has_perm(f"Data_view.{COMPARISON.get(request.method)}_industryspecifictyping")
+        return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_"
+                                     f"industryspecifictyping")
 
 # Permissions
 
@@ -153,6 +164,8 @@ class CharacteristicsOrganizationRest(viewsets.ModelViewSet):
         if request.GET.get('paginate') is not None:
             self.pagination_class.page_size = request.GET.get('paginate')
         return super().list(request, *args, **kwargs)
+
+
 
 class HeadByBKRest(viewsets.ModelViewSet):
     queryset = HeadByBK.objects.all()
