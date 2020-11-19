@@ -9,7 +9,7 @@ from django.db import models
 
 
 class TypeInstitution(models.Model):
-    """Модель базы со справочником Типов учереждения"""
+    """Типов учреждения и ссылка на внешний id для связи с соответствующим источником типа"""
 
     outside_id = models.IntegerField('outside_id')
     name_type = models.TextField('Тип учреждения')
@@ -22,7 +22,7 @@ class TypeInstitution(models.Model):
 
 
 class TypeOrganization(models.Model):
-    """Модель базы со справочником Типов организаций"""
+    """Тип организации и ссылка на внешний id для связи с соответствующим источником типа"""
     outside_id = models.IntegerField('outside_id')
     name_type = models.TextField('Тип организации')
 
@@ -34,7 +34,7 @@ class TypeOrganization(models.Model):
 
 
 class StatusEGRUL(models.Model):
-    """Модель базы со справочником статусов ЕГРУЛ"""
+    """Статус ЕГРУЛ и ссылка на внешний id для связи с соответствующим источником статуса"""
     outside_id = models.IntegerField('outside_id')
     name_status = models.TextField('Статус ЕГРЮЛ')
 
@@ -46,7 +46,7 @@ class StatusEGRUL(models.Model):
 
 
 class StatusRYBPNYBP(models.Model):
-    """Модель базы со справочником статусами РУБПНУБП"""
+    """Статус РУБПНУБП и ссылка на внешний id для связи с соответствующим источником статуса"""
     outside_id = models.IntegerField('outside_id')
     name_status = models.TextField('Статус РУБПНУБП')
 
@@ -58,7 +58,7 @@ class StatusRYBPNYBP(models.Model):
 
 
 class IndustrySpecificTyping(models.Model):
-    """Модель базы со справочником Отраслевых типизаций"""
+    """Наименование отраслевой типизации учреждения"""
     name_typing = models.TextField('Отраслевая типизация')
 
     class Meta:
@@ -69,28 +69,29 @@ class IndustrySpecificTyping(models.Model):
 
 
 class BudgetLevel(models.IntegerChoices):
-    not_defined = 0, 'Не определен'
-    federal_budget = 1, 'Федеральный бюджет'
-    budget_subject_RF = 2, 'Бюджет субъекта Российской Федерации'
-    local_budget = 3, 'Местный бюджет'
-    budget_city_district = 4, 'Бюджет городского округа'
-    budget_municipal_district = 5, 'Бюджет муниципального района'
-    budget_urban_settlement = 6, 'Бюджет городского поселения'
-    budget_rural_settlement = 7, 'Бюджет сельского поселения'
-    budget_state_extra_budgetary_fund_RF = 8, 'Бюджет государственного внебюджетного фонда Российской Федерации'
-    budget_pension_fund_RF = 9, 'Бюджет Пенсионного фонда Российской Федерации'
-    budget_social_insurance_fund_RF = 10, 'Бюджет Фонда социального страхования Российской Федерации'
-    budget_federal_compulsory_medical_insurance_fund = 11, 'Бюджет Федерального фонда обязательного медицинского ' \
+    """Список уровней бюджетов организаций"""
+    NOT_DEFINED = 0, 'Не определен'
+    FEDERAL_BUDGET = 1, 'Федеральный бюджет'
+    BUDGET_SUBJECT_RF = 2, 'Бюджет субъекта Российской Федерации'
+    LOCAL_BUDGET = 3, 'Местный бюджет'
+    BUDGET_CITY_DISTRICT = 4, 'Бюджет городского округа'
+    BUDGET_MUNICIPAL_DISTRICT = 5, 'Бюджет муниципального района'
+    BUDGET_URBAN_SETTLEMENT = 6, 'Бюджет городского поселения'
+    BUDGET_RURAL_SETTLEMENT = 7, 'Бюджет сельского поселения'
+    BUDGET_STATE_EXTRA_BUDGETARY_FUND_RF = 8, 'Бюджет государственного внебюджетного фонда Российской Федерации'
+    BUDGET_PENSION_FUND_RF = 9, 'Бюджет Пенсионного фонда Российской Федерации'
+    BUDGET_SOCIAL_INSURANCE_FUND_RF = 10, 'Бюджет Фонда социального страхования Российской Федерации'
+    BUDGET_FEDERAL_COMPULSORY_MEDICAL_INSURANCE_FUND = 11, 'Бюджет Федерального фонда обязательного медицинского ' \
                                                            'страхования '
-    budget_territorial_state_extra_budgetary_fund = 12, 'Бюджет территориального государственного внебюджетного фонда'
-    budget_city_district_with_intra_city_division = 13, 'Бюджет городского округа с внутригородским делением'
-    local_budget_municipality_city_federal_significance = 14, 'Бюджет внутригородского муниципального образования ' \
+    BUDGET_TERRITORIAL_STATE_EXTRA_BUDGETARY_FUND = 12, 'Бюджет территориального государственного внебюджетного фонда'
+    BUDGET_CITY_DISTRICT_WITH_INTRA_CITY_DIVISION = 13, 'Бюджет городского округа с внутригородским делением'
+    LOCAL_BUDGET_MUNICIPALITY_CITY_FEDERAL_SIGNIFICANCE = 14, 'Бюджет внутригородского муниципального образования ' \
                                                               'города федерального значения '
-    budget_inner_city_district = 15, 'Бюджет внутригородского района'
+    BUDGET_INNER_CITY_DISTRICT = 15, 'Бюджет внутригородского района'
 
 
 class HeadByBK(models.Model):
-    """Модель базы с кодами по БК и их наименованиями"""
+    """Код главы по БК и наименование кода"""
     code_head_by_bk = models.CharField('Код главы по БК', db_column='code_head_by_BK', max_length=3)
     name_head_by_bk = models.TextField('Наименование главы по БК', db_column='name_head_by_BK')
 
@@ -103,7 +104,9 @@ class HeadByBK(models.Model):
 
 class CharacteristicsOrganization(models.Model):
     """Характеристика организации - набор информации об органицзации (Наименование, ИНН, КПП)
-    и её статусы (тип организации, тип учреждения, статус ЕГРЮЛ и РУБПНУБП"""
+    и её статусы (тип организации, тип учреждения, статус ЕГРЮЛ и РУБПНУБП, код и наименование главы по БК,
+    отраслевая типизация)"""
+
     id_institutions = models.IntegerField('Код учреждения', primary_key=True)
 
     name_institutions = models.TextField('Наименование организации')
@@ -112,7 +115,7 @@ class CharacteristicsOrganization(models.Model):
 
     kpp = models.CharField('КПП', db_column='KPP', max_length=9)
 
-    budget_level = models.IntegerField(choices=BudgetLevel.choices, default=BudgetLevel.not_defined)
+    budget_level = models.IntegerField(choices=BudgetLevel.choices, default=BudgetLevel.NOT_DEFINED)
 
     type_institutions = models.ForeignKey(TypeInstitution, on_delete=models.PROTECT,
                                           verbose_name='Код типа учреждения')

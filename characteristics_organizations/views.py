@@ -91,7 +91,7 @@ class IndustrySpecificTypingFilter(filters.FilterSet):
 
 # Permissions
 class CharacteristicsOrganizationPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для обзорных данных"""
+    """Проверка прав пользователя для характеристик учреждений"""
 
     def has_permission(self, request, view):
         list_table_names = ['characteristicsorganization', 'headbybk', 'typeinstitutions', 'typeorganizations',
