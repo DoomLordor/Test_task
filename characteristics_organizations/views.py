@@ -163,8 +163,11 @@ class CharacteristicsOrganizationRest(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         if request.GET.get('paginate') is not None:
             self.pagination_class.page_size = request.GET.get('paginate')
-        return super().list(request, *args, **kwargs)
-
+            response = super().list(request, *args, **kwargs)
+            self.pagination_class.page_size = 10
+            return response
+        else:
+            return super().list(request, *args, **kwargs)
 
 
 class HeadByBKRest(viewsets.ModelViewSet):
