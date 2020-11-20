@@ -75,39 +75,79 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
         model = CharacteristicsOrganization
         fields = '__all__'
 
-    def create1(self, validated_data):
-        try:
-            validated_data['budget_level'] = validated_data['get_budget_level_display']
-            validated_data.pop('get_budget_level_display')
-
+    def is_valid(self, raise_exception=False):
+        if super().is_valid(raise_exception):
             for level in BudgetLevel.choices:
-                if validated_data['budget_level'] in level:
-                    validated_data['budget_level'] = level[0]
+                if self.initial_data['budget_level'] in level:
+                    break
+            else:
+                self._errors = dict([('budget_level', 'Такой уровень бюджета отсутствует')])
 
-            validated_data['type_institutions'] = TypeInstitution.objects.get(
+            if not self._errors and not TypeInstitution.objects.filter(
+                    name_type=self.initial_data['type_institutions']['name_type']).exists():
+                self._errors = dict([('type_institutions', 'Данный тип учреждения отсутствует')])
+
+            elif not self._errors and not TypeOrganization.objects.filter(
+                    name_type=self.initial_data['type_organizations']['name_type']).exists():
+
+                self._errors = dict([('type_organizations', 'Данный тип организации отсутствует')])
+
+            elif not self._errors and not StatusEGRUL.objects.filter(
+                    name_status=self.initial_data['status_egrul']['name_status']).exists():
+
+                self._errors = dict([('status_egrul', 'Данный статус ЕГРЮЛ отсутствует')])
+
+            elif not self._errors and not StatusRYBPNYBP.objects.filter(
+                    name_status=self.initial_data['status_rybpnybp']['name_status']).exists():
+
+                self._errors = dict([('status_rybpnybp', 'Данный статус РУБПНУБП отсутствует')])
+
+            elif not self._errors and not IndustrySpecificTyping.objects.filter(
+                    name_typing=self.initial_data['industry_specific_typing']['name_typing']).exists():
+
+                self._errors = dict([('industry_specific_typing', 'Данная отраслевая типизация отсутствует')])
+
+            elif not self._errors and not HeadByBK.objects.filter(
+                    name_head_by_bk=self.initial_data['head_by_bk']['name_head_by_bk'],
+                    code_head_by_bk=self.initial_data['head_by_bk']['code_head_by_bk']).exists():
+
+                self._errors = dict([('head_by_bk', 'Данная глава по бк отсутствует')])
+
+            return not bool(self._errors)
+
+        else:
+            return False
+
+    def create(self, validated_data):
+        """Переопределение метода crete из-за отсутсвия поддержки работы с вложенными типами данных."""
+
+        validated_data['budget_level'] = validated_data['get_budget_level_display']
+        validated_data.pop('get_budget_level_display')
+
+        for level in BudgetLevel.choices:
+            if validated_data['budget_level'] in level:
+                validated_data['budget_level'] = level[0]
+
+        validated_data['type_institutions'] = TypeInstitution.objects.get(
                 name_type=validated_data['type_institutions']['name_type'])
 
-            validated_data['type_organizations'] = TypeOrganization.objects.get(
+        validated_data['type_organizations'] = TypeOrganization.objects.get(
                 name_type=validated_data['type_organizations']['name_type'])
 
-            validated_data['status_egrul'] = StatusEGRUL.objects.get(
+        validated_data['status_egrul'] = StatusEGRUL.objects.get(
                 name_status=validated_data['status_egrul']['name_status'])
 
-            validated_data['status_rybpnybp'] = StatusRYBPNYBP.objects.get(
+        validated_data['status_rybpnybp'] = StatusRYBPNYBP.objects.get(
                 name_status=validated_data['status_rybpnybp']['name_status'])
 
-            validated_data['industry_specific_typing'] = IndustrySpecificTyping.objects.get(
+        validated_data['industry_specific_typing'] = IndustrySpecificTyping.objects.get(
                 name_typing=validated_data['industry_specific_typing']['name_typing'])
 
-            validated_data['head_by_bk'] = HeadByBK.objects.get(
+        validated_data['head_by_bk'] = HeadByBK.objects.get(
                 name_head_by_bk=validated_data['head_by_bk']['name_head_by_bk'],
                 code_head_by_bk=validated_data['head_by_bk']['code_head_by_bk'])
 
-            instance = CharacteristicsOrganization.objects.create(**validated_data)
-
-            return instance
-        except Exception:
-            return
+        return super().create(validated_data)
 
     # def update(self, instance, validated_data):
     #     validated_data['budget_level'] = validated_data['get_budget_level_display']

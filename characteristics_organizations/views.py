@@ -1,4 +1,5 @@
-from rest_framework import viewsets, permissions
+from rest_framework.response import Response
+from rest_framework import viewsets, permissions, status
 from rest_framework.pagination import PageNumberPagination
 
 from django_filters import rest_framework as filters
@@ -169,6 +170,12 @@ class CharacteristicsOrganizationRest(viewsets.ModelViewSet):
         else:
             return super().list(request, *args, **kwargs)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class HeadByBKRest(viewsets.ModelViewSet):
     queryset = HeadByBK.objects.all()
