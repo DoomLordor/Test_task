@@ -47,7 +47,7 @@ class IndustrySpecificTypingSerializer(serializers.ModelSerializer):
 
 
 class HeadByBKSerializer(serializers.ModelSerializer):
-    """Коды по бк"""
+    """Сериализатор кода по бк"""
 
     class Meta:
         model = HeadByBK
@@ -55,7 +55,7 @@ class HeadByBKSerializer(serializers.ModelSerializer):
 
 
 class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
-    """Обзор данных"""
+    """Сериализатор характеристик организации"""
 
     budget_level = serializers.CharField(source='get_budget_level_display')
 
