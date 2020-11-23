@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-
 from .models import (CharacteristicsOrganization, HeadByBK, TypeInstitution,
                      TypeOrganization, StatusEGRUL,
                      StatusRYBPNYBP, IndustrySpecificTyping, BudgetLevel)
@@ -78,40 +77,52 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
     def is_valid(self, raise_exception=False):
         if super().is_valid(raise_exception):
             for level in BudgetLevel.choices:
-                if self.initial_data['budget_level'] in level:
+                if self.validated_data['get_budget_level_display'] in level:
                     break
             else:
-                self._errors = dict([('budget_level', 'Такой уровень бюджета отсутствует')])
+                self._errors = {'budget_level': 'Такой уровень бюджета отсутствует'}
 
             if not self._errors and not TypeInstitution.objects.filter(
-                    name_type=self.initial_data['type_institutions']['name_type']).exists():
-                self._errors = dict([('type_institutions', 'Данный тип учреждения отсутствует')])
+                    name_type=self.validated_data['type_institutions']['name_type']).exists():
+                self._errors = {'type_institutions': 'Данный тип учреждения отсутствует'}
 
             elif not self._errors and not TypeOrganization.objects.filter(
-                    name_type=self.initial_data['type_organizations']['name_type']).exists():
+                    name_type=self.validated_data['type_organizations']['name_type']).exists():
 
-                self._errors = dict([('type_organizations', 'Данный тип организации отсутствует')])
+                self._errors = {'type_organizations': 'Данный тип организации отсутствует'}
 
             elif not self._errors and not StatusEGRUL.objects.filter(
-                    name_status=self.initial_data['status_egrul']['name_status']).exists():
+                    name_status=self.validated_data['status_egrul']['name_status']).exists():
 
-                self._errors = dict([('status_egrul', 'Данный статус ЕГРЮЛ отсутствует')])
+                self._errors = {'status_egrul': 'Данный статус ЕГРЮЛ отсутствует'}
 
             elif not self._errors and not StatusRYBPNYBP.objects.filter(
-                    name_status=self.initial_data['status_rybpnybp']['name_status']).exists():
+                    name_status=self.validated_data['status_rybpnybp']['name_status']).exists():
 
-                self._errors = dict([('status_rybpnybp', 'Данный статус РУБПНУБП отсутствует')])
+                self._errors = {'status_rybpnybp': 'Данный статус РУБПНУБП отсутствует'}
 
             elif not self._errors and not IndustrySpecificTyping.objects.filter(
-                    name_typing=self.initial_data['industry_specific_typing']['name_typing']).exists():
+                    name_typing=self.validated_data['industry_specific_typing']['name_typing']).exists():
 
-                self._errors = dict([('industry_specific_typing', 'Данная отраслевая типизация отсутствует')])
+                self._errors = {'industry_specific_typing': 'Данная отраслевая типизация отсутствует'}
 
             elif not self._errors and not HeadByBK.objects.filter(
-                    name_head_by_bk=self.initial_data['head_by_bk']['name_head_by_bk'],
-                    code_head_by_bk=self.initial_data['head_by_bk']['code_head_by_bk']).exists():
+                    name_head_by_bk=self.validated_data['head_by_bk']['name_head_by_bk'],
+                    code_head_by_bk=self.validated_data['head_by_bk']['code_head_by_bk']).exists():
 
-                self._errors = dict([('head_by_bk', 'Данная глава по бк отсутствует')])
+                self._errors = {'head_by_bk': 'Данная глава по бк отсутствует'}
+
+            elif not self._errors and len(self.validated_data['inn']) != 10:
+                self._errors = {'inn': 'Не верная длина ИНН организации'}
+
+            elif not self._errors and not self.validated_data['inn'].isdigit():
+                self._errors = {'inn': 'ИНН не является числом'}
+
+            elif not self._errors and len(self.validated_data['kpp']) != 9:
+                self._errors = {'kpp': 'Не верная длина КПП организации'}
+
+            elif not self._errors and not self.validated_data['kpp'].isdigit():
+                self._errors = {'kpp': 'КПП не является числом'}
 
             return not bool(self._errors)
 
@@ -119,46 +130,39 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
             return False
 
     def create(self, validated_data):
-        """Переопределение метода crete из-за отсутсвия поддержки работы с вложенными типами данных."""
+        return super().create(convert_validated_data(validated_data))
 
-        validated_data['budget_level'] = validated_data['get_budget_level_display']
-        validated_data.pop('get_budget_level_display')
+    def update(self, instance, validated_data):
+        return super().update(instance, convert_validated_data(validated_data))
 
-        for level in BudgetLevel.choices:
-            if validated_data['budget_level'] in level:
-                validated_data['budget_level'] = level[0]
 
-        validated_data['type_institutions'] = TypeInstitution.objects.get(
-                name_type=validated_data['type_institutions']['name_type'])
+def convert_validated_data(validated_data):
+    """Конвертация данных в объекты таблиц связных таблиц и преобразование метки в значение"""
 
-        validated_data['type_organizations'] = TypeOrganization.objects.get(
-                name_type=validated_data['type_organizations']['name_type'])
+    validated_data['budget_level'] = validated_data['get_budget_level_display']
+    validated_data.pop('get_budget_level_display')
 
-        validated_data['status_egrul'] = StatusEGRUL.objects.get(
-                name_status=validated_data['status_egrul']['name_status'])
+    for level in BudgetLevel.choices:
+        if validated_data['budget_level'] in level:
+            validated_data['budget_level'] = level[0]
 
-        validated_data['status_rybpnybp'] = StatusRYBPNYBP.objects.get(
-                name_status=validated_data['status_rybpnybp']['name_status'])
+    validated_data['type_institutions'] = TypeInstitution.objects.get(
+        name_type=validated_data['type_institutions']['name_type'])
 
-        validated_data['industry_specific_typing'] = IndustrySpecificTyping.objects.get(
-                name_typing=validated_data['industry_specific_typing']['name_typing'])
+    validated_data['type_organizations'] = TypeOrganization.objects.get(
+        name_type=validated_data['type_organizations']['name_type'])
 
-        validated_data['head_by_bk'] = HeadByBK.objects.get(
-                name_head_by_bk=validated_data['head_by_bk']['name_head_by_bk'],
-                code_head_by_bk=validated_data['head_by_bk']['code_head_by_bk'])
+    validated_data['status_egrul'] = StatusEGRUL.objects.get(
+        name_status=validated_data['status_egrul']['name_status'])
 
-        return super().create(validated_data)
+    validated_data['status_rybpnybp'] = StatusRYBPNYBP.objects.get(
+        name_status=validated_data['status_rybpnybp']['name_status'])
 
-    # def update(self, instance, validated_data):
-    #     validated_data['budget_level'] = validated_data['get_budget_level_display']
-    #     validated_data.pop('get_budget_level_display')
-    #
-    #     for level in BudgetLevel.choices:
-    #         if validated_data['budget_level'] in level:
-    #             validated_data['budget_level'] = level[0]
-    #
-    #     for data in validated_data:
-    #         if DataSerializers(instance).data[data] != validated_data[data]:
-    #             instance.objects.update(**{data: validated_data[data]})
-    #     return instance
+    validated_data['industry_specific_typing'] = IndustrySpecificTyping.objects.get(
+        name_typing=validated_data['industry_specific_typing']['name_typing'])
 
+    validated_data['head_by_bk'] = HeadByBK.objects.get(
+        name_head_by_bk=validated_data['head_by_bk']['name_head_by_bk'],
+        code_head_by_bk=validated_data['head_by_bk']['code_head_by_bk'])
+
+    return validated_data
