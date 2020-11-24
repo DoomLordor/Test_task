@@ -140,39 +140,38 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
             return False
 
     def create(self, validated_data):
-        return super().create(convert_validated_data(validated_data))
+        return super().create(self.convert_validated_data(validated_data))
 
     def update(self, instance, validated_data):
-        return super().update(instance, convert_validated_data(validated_data))
+        return super().update(instance, self.convert_validated_data(validated_data))
 
+    def convert_validated_data(self, validated_data):
+        """Конвертация данных в объекты таблиц связных таблиц и преобразование метки в значение"""
 
-def convert_validated_data(validated_data):
-    """Конвертация данных в объекты таблиц связных таблиц и преобразование метки в значение"""
+        validated_data['budget_level'] = validated_data['get_budget_level_display']
+        validated_data.pop('get_budget_level_display')
 
-    validated_data['budget_level'] = validated_data['get_budget_level_display']
-    validated_data.pop('get_budget_level_display')
+        for level in BudgetLevel.choices:
+            if validated_data['budget_level'] in level:
+                validated_data['budget_level'] = level[0]
 
-    for level in BudgetLevel.choices:
-        if validated_data['budget_level'] in level:
-            validated_data['budget_level'] = level[0]
+        validated_data['type_institutions'] = TypeInstitution.objects.get(
+            name_type=validated_data['type_institutions']['name_type'])
 
-    validated_data['type_institutions'] = TypeInstitution.objects.get(
-        name_type=validated_data['type_institutions']['name_type'])
+        validated_data['type_organizations'] = TypeOrganization.objects.get(
+            name_type=validated_data['type_organizations']['name_type'])
 
-    validated_data['type_organizations'] = TypeOrganization.objects.get(
-        name_type=validated_data['type_organizations']['name_type'])
+        validated_data['status_egrul'] = StatusEGRUL.objects.get(
+            name_status=validated_data['status_egrul']['name_status'])
 
-    validated_data['status_egrul'] = StatusEGRUL.objects.get(
-        name_status=validated_data['status_egrul']['name_status'])
+        validated_data['status_rybpnybp'] = StatusRYBPNYBP.objects.get(
+            name_status=validated_data['status_rybpnybp']['name_status'])
 
-    validated_data['status_rybpnybp'] = StatusRYBPNYBP.objects.get(
-        name_status=validated_data['status_rybpnybp']['name_status'])
+        validated_data['industry_specific_typing'] = IndustrySpecificTyping.objects.get(
+            name_typing=validated_data['industry_specific_typing']['name_typing'])
 
-    validated_data['industry_specific_typing'] = IndustrySpecificTyping.objects.get(
-        name_typing=validated_data['industry_specific_typing']['name_typing'])
+        validated_data['head_by_bk'] = HeadByBK.objects.get(
+            name_head_by_bk=validated_data['head_by_bk']['name_head_by_bk'],
+            code_head_by_bk=validated_data['head_by_bk']['code_head_by_bk'])
 
-    validated_data['head_by_bk'] = HeadByBK.objects.get(
-        name_head_by_bk=validated_data['head_by_bk']['name_head_by_bk'],
-        code_head_by_bk=validated_data['head_by_bk']['code_head_by_bk'])
-
-    return validated_data
+        return validated_data
