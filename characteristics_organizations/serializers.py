@@ -52,6 +52,16 @@ class HeadByBKSerializer(serializers.ModelSerializer):
         model = HeadByBK
         fields = '__all__'
 
+    def is_valid(self, raise_exception=False):
+        if super().is_valid(raise_exception):
+            if not self.validated_data['code_head_by_bk'].isdigit():
+                self._errors = {'code_head_by_bk': 'Код главы по БК сотстоит не из цифр'}
+            elif not self._errors and len(self.validated_data['code_head_by_bk']) != 3:
+                self._errors = {'code_head_by_bk': 'Код главы по БК не верной длины'}
+
+            return not bool(self._errors)
+        else:
+            return False
 
 class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
     """Сериализатор характеристик организации"""
