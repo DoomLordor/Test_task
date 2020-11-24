@@ -22,7 +22,7 @@ class PaginationData(PageNumberPagination):
 
 # filters
 class CharacteristicsOrganizationFilter(filters.FilterSet):
-    """Фильтры для обзорных данных"""
+    """Фильтр для обзорных данных"""
 
     id_institutions = filters.NumberFilter()
     name_institutions = filters.CharFilter(lookup_expr='icontains')
@@ -42,7 +42,7 @@ class CharacteristicsOrganizationFilter(filters.FilterSet):
 
 
 class HeadByBKFilter(filters.FilterSet):
-    """Фильтры для кодов по БК"""
+    """Фильтр для кодов по БК"""
 
     class Meta:
         model = HeadByBK
@@ -50,7 +50,7 @@ class HeadByBKFilter(filters.FilterSet):
 
 
 class TypeInstitutionFilter(filters.FilterSet):
-    """Фильтры для типов учреждений"""
+    """Фильтр для типов учреждений"""
 
     class Meta:
         model = TypeInstitution
@@ -58,7 +58,7 @@ class TypeInstitutionFilter(filters.FilterSet):
 
 
 class TypeOrganizationFilter(filters.FilterSet):
-    """Фильтры для типов организаций"""
+    """Фильтр для типов организаций"""
 
     class Meta:
         model = TypeOrganization
@@ -66,7 +66,7 @@ class TypeOrganizationFilter(filters.FilterSet):
 
 
 class StatusEGRULFilter(filters.FilterSet):
-    """Фильтры для статусов ЕГРЮЛ"""
+    """Фильтр для статусов ЕГРЮЛ"""
 
     class Meta:
         model = StatusEGRUL
@@ -74,7 +74,7 @@ class StatusEGRULFilter(filters.FilterSet):
 
 
 class StatusRYBPNYBPFilter(filters.FilterSet):
-    """Фильтры для статусов РУБПНУБП"""
+    """Фильтр для статусов РУБПНУБП"""
 
     class Meta:
         model = StatusRYBPNYBP
@@ -82,7 +82,7 @@ class StatusRYBPNYBPFilter(filters.FilterSet):
 
 
 class IndustrySpecificTypingFilter(filters.FilterSet):
-    """Фильтры для отраслевой типизации"""
+    """Фильтр для отраслевой типизации"""
 
     class Meta:
         model = IndustrySpecificTyping
@@ -92,7 +92,7 @@ class IndustrySpecificTypingFilter(filters.FilterSet):
 
 # Permissions
 class CharacteristicsOrganizationPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для характеристик учреждений"""
+    """Проверка прав пользователя на работу с таблицей характеристик учреждений"""
 
     def has_permission(self, request, view):
         list_table_names = ['characteristicsorganization', 'headbybk', 'typeinstitutions', 'typeorganizations',
@@ -108,21 +108,21 @@ class CharacteristicsOrganizationPermissions(permissions.BasePermission):
 
 
 class HeadByBKPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для кодов по бк"""
+    """Проверка прав пользователя на работу с таблицей кодов по БК"""
 
     def has_permission(self, request, view):
         return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_headbybk")
 
 
 class TypeInstitutionPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для кодов по бк"""
+    """Проверка прав пользователя на работу с таблицей типов учреждений"""
 
     def has_permission(self, request, view):
         return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_typeinstitutions")
 
 
 class TypeOrganizationPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для кодов по бк"""
+    """Проверка прав пользователя на работу с таблицей типов организаций"""
 
     def has_permission(self, request, view):
         return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_"
@@ -130,21 +130,21 @@ class TypeOrganizationPermissions(permissions.BasePermission):
 
 
 class StatusEGRULPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для кодов по бк"""
+    """Проверка прав пользователя на работу с таблицей  статусов ЕГРЮЛ"""
 
     def has_permission(self, request, view):
         return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_statusegrul")
 
 
 class StatusRYBPNYBPPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для кодов по бк"""
+    """Проверка прав пользователя на работу с таблицей статусов РУБПНУБП"""
 
     def has_permission(self, request, view):
         return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_statusrybpnybp")
 
 
 class IndustrySpecificTypingPermissions(permissions.BasePermission):
-    """Проверка прав пользователя для кодов по бк"""
+    """Проверка прав пользователя на работу с таблицей отраслевых типизаций"""
 
     def has_permission(self, request, view):
         return request.user.has_perm(f"characteristics_organizations.{COMPARISON.get(request.method)}_"
