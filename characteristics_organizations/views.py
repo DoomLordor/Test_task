@@ -177,6 +177,16 @@ class CharacteristicsOrganizationRest(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
+        if serializer.is_valid(raise_exception=True):
+            return super().update(request, *args, **kwargs)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class HeadByBKRest(viewsets.ModelViewSet):
     queryset = HeadByBK.objects.all()
     serializer_class = HeadByBKSerializer
