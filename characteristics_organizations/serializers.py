@@ -126,13 +126,13 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
                 self._errors = {'inn': 'Не верная длина ИНН организации'}
 
             elif not self._errors and not self.validated_data['inn'].isdigit():
-                self._errors = {'inn': 'ИНН не является числом'}
+                self._errors = {'inn': 'ИНН состоит не из цифр'}
 
             elif not self._errors and len(self.validated_data['kpp']) != 9:
                 self._errors = {'kpp': 'Не верная длина КПП организации'}
 
             elif not self._errors and not self.validated_data['kpp'].isdigit():
-                self._errors = {'kpp': 'КПП не является числом'}
+                self._errors = {'kpp': 'КПП состоит не из цифр'}
 
             return not bool(self._errors)
 
