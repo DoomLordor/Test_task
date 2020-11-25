@@ -1,13 +1,14 @@
 from rest_framework.response import Response
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, serializers
 from rest_framework.pagination import PageNumberPagination
 
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import (CharacteristicsOrganizationSerializer, HeadByBKSerializer, TypeInstitutionSerializer,
+from .serializers import (CharacteristicsOrganizationSerializerFromList, HeadByBKSerializer, TypeInstitutionSerializer,
                           TypeOrganizationSerializer, StatusEGRULSerializer,
-                          StatusRYBPNYBPSerializer, IndustrySpecificTypingSerializer)
+                          StatusRYBPNYBPSerializer, IndustrySpecificTypingSerializer,
+                          CharacteristicsOrganizationSerializer)
 from .models import (CharacteristicsOrganization, HeadByBK, TypeInstitution,
                      TypeOrganization, StatusEGRUL,
                      StatusRYBPNYBP, IndustrySpecificTyping)
@@ -188,6 +189,11 @@ class CharacteristicsOrganizationRest(ModifiedModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CharacteristicsOrganizationFilter
     permission_classes = (CharacteristicsOrganizationPermissions,)
+
+    def get_serializer_class(self):
+        if self.action != 'list':
+            return self.serializer_class
+        return CharacteristicsOrganizationSerializerFromList
 
 
 class HeadByBKRest(ModifiedModelViewSet):

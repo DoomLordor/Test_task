@@ -54,6 +54,7 @@ class HeadByBKSerializer(serializers.ModelSerializer):
 
     def is_valid(self, raise_exception=False):
         if super().is_valid(raise_exception):
+
             if not self.validated_data['code_head_by_bk'].isdigit():
                 self._errors = {'code_head_by_bk': 'Код главы по БК сотстоит не из цифр'}
             elif not self._errors and len(self.validated_data['code_head_by_bk']) != 3:
@@ -63,7 +64,7 @@ class HeadByBKSerializer(serializers.ModelSerializer):
         else:
             return False
 
-class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
+class CharacteristicsOrganizationSerializerFromList(serializers.ModelSerializer):
     """Сериализатор характеристик организации"""
 
     budget_level = serializers.CharField(source='get_budget_level_display')
@@ -86,92 +87,37 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
 
     def is_valid(self, raise_exception=False):
         if super().is_valid(raise_exception):
-            for level in BudgetLevel.choices:
-                if self.validated_data['get_budget_level_display'] in level:
-                    break
-            else:
-                self._errors = {'budget_level': 'Такой уровень бюджета отсутствует'}
 
-            if not self._errors and not TypeInstitution.objects.filter(
-                    name_type=self.validated_data['type_institutions']['name_type']).exists():
-                self._errors = {'type_institutions': 'Данный тип учреждения отсутствует'}
+            error = check_INN(self.validated_data['inn'])
 
-            elif not self._errors and not TypeOrganization.objects.filter(
-                    name_type=self.validated_data['type_organizations']['name_type']).exists():
+            if error:
+                self._errors = error
+                return False
 
-                self._errors = {'type_organizations': 'Данный тип организации отсутствует'}
+            error = check_KPP(self.validated_data['kpp'])
 
-            elif not self._errors and not StatusEGRUL.objects.filter(
-                    name_status=self.validated_data['status_egrul']['name_status']).exists():
-
-                self._errors = {'status_egrul': 'Данный статус ЕГРЮЛ отсутствует'}
-
-            elif not self._errors and not StatusRYBPNYBP.objects.filter(
-                    name_status=self.validated_data['status_rybpnybp']['name_status']).exists():
-
-                self._errors = {'status_rybpnybp': 'Данный статус РУБПНУБП отсутствует'}
-
-            elif not self._errors and not IndustrySpecificTyping.objects.filter(
-                    name_typing=self.validated_data['industry_specific_typing']['name_typing']).exists():
-
-                self._errors = {'industry_specific_typing': 'Данная отраслевая типизация отсутствует'}
-
-            elif not self._errors and not HeadByBK.objects.filter(
-                    name_head_by_bk=self.validated_data['head_by_bk']['name_head_by_bk'],
-                    code_head_by_bk=self.validated_data['head_by_bk']['code_head_by_bk']).exists():
-
-                self._errors = {'head_by_bk': 'Данная глава по бк отсутствует'}
-
-            elif not self._errors and len(self.validated_data['inn']) != 10:
-                self._errors = {'inn': 'Не верная длина ИНН организации'}
-
-            elif not self._errors and not self.validated_data['inn'].isdigit():
-                self._errors = {'inn': 'ИНН состоит не из цифр'}
-
-            elif not self._errors and len(self.validated_data['kpp']) != 9:
-                self._errors = {'kpp': 'Не верная длина КПП организации'}
-
-            elif not self._errors and not self.validated_data['kpp'].isdigit():
-                self._errors = {'kpp': 'КПП состоит не из цифр'}
-
-            return not bool(self._errors)
-
+            if error:
+                self._errors = error
+                return False
         else:
             return False
 
-    def create(self, validated_data):
-        return super().create(self.convert_validated_data(validated_data))
+class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
 
-    def update(self, instance, validated_data):
-        return super().update(instance, self.convert_validated_data(validated_data))
+    class Meta:
+        model = CharacteristicsOrganization
+        fields = '__all__'
 
-    def convert_validated_data(self, validated_data):
-        """Конвертация данных в объекты таблиц связных таблиц и преобразование метки в значение"""
+def check_INN(INN):
+    if len(INN) != 10:
+        return {'inn': 'Не верная длина ИНН организации'}
+    elif not INN.isdigit():
+        return {'inn': 'ИНН состоит не из цифр'}
+    return {}
 
-        validated_data['budget_level'] = validated_data['get_budget_level_display']
-        validated_data.pop('get_budget_level_display')
-
-        for level in BudgetLevel.choices:
-            if validated_data['budget_level'] in level:
-                validated_data['budget_level'] = level[0]
-
-        validated_data['type_institutions'] = TypeInstitution.objects.get(
-            name_type=validated_data['type_institutions']['name_type'])
-
-        validated_data['type_organizations'] = TypeOrganization.objects.get(
-            name_type=validated_data['type_organizations']['name_type'])
-
-        validated_data['status_egrul'] = StatusEGRUL.objects.get(
-            name_status=validated_data['status_egrul']['name_status'])
-
-        validated_data['status_rybpnybp'] = StatusRYBPNYBP.objects.get(
-            name_status=validated_data['status_rybpnybp']['name_status'])
-
-        validated_data['industry_specific_typing'] = IndustrySpecificTyping.objects.get(
-            name_typing=validated_data['industry_specific_typing']['name_typing'])
-
-        validated_data['head_by_bk'] = HeadByBK.objects.get(
-            name_head_by_bk=validated_data['head_by_bk']['name_head_by_bk'],
-            code_head_by_bk=validated_data['head_by_bk']['code_head_by_bk'])
-
-        return validated_data
+def check_KPP(KPP):
+    if len(KPP) != 10:
+        return {'kpp': 'Не верная длина КПП организации'}
+    elif not KPP.isdigit():
+        return {'kpp': 'Кпп состоит не из цифр'}
+    return {}
