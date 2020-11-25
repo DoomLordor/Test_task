@@ -107,9 +107,9 @@ class CharacteristicsOrganization(models.Model):
     и её статусы (тип организации, тип учреждения, статус ЕГРЮЛ и РУБПНУБП, код и наименование главы по БК,
     отраслевая типизация)"""
 
-    id_institutions = models.IntegerField('Код учреждения', primary_key=True)
+    id_institution = models.IntegerField('Код учреждения', primary_key=True)
 
-    name_institutions = models.TextField('Наименование организации')
+    name_institution = models.TextField('Наименование организации')
 
     inn = models.CharField('ИНН', db_column='INN', max_length=10)
 
@@ -117,11 +117,11 @@ class CharacteristicsOrganization(models.Model):
 
     budget_level = models.IntegerField(choices=BudgetLevel.choices, default=BudgetLevel.NOT_DEFINED)
 
-    type_institutions = models.ForeignKey(TypeInstitution, on_delete=models.PROTECT,
-                                          verbose_name='Код типа учреждения')
+    type_institution = models.ForeignKey(TypeInstitution, on_delete=models.PROTECT,
+                                         verbose_name='Код типа учреждения')
 
-    type_organizations = models.ForeignKey(TypeOrganization, on_delete=models.PROTECT,
-                                           verbose_name='Код типа организации')
+    type_organization = models.ForeignKey(TypeOrganization, on_delete=models.PROTECT,
+                                          verbose_name='Код типа организации')
 
     status_egrul = models.ForeignKey(StatusEGRUL, on_delete=models.PROTECT, verbose_name='Код статуса ЕГРЮЛ')
 
@@ -133,17 +133,17 @@ class CharacteristicsOrganization(models.Model):
     head_by_bk = models.ForeignKey(HeadByBK, on_delete=models.PROTECT, verbose_name='Код уровня бюджета')
 
     class Meta:
-        ordering = ['id_institutions']
+        ordering = ['id_institution']
         managed = True
         db_table = 'characteristics_organization'
-        unique_together = (('id_institutions', 'name_institutions', 'inn'),)
+        unique_together = (('id_institution', 'name_institution', 'inn'),)
         verbose_name = 'Характеристики организации'
 
     def __str__(self):
-        return self.name_institutions
+        return self.name_institution
 
     def __repr__(self):
-        return self.name_institutions
+        return self.name_institution
 
 
 class AuthGroup(models.Model):

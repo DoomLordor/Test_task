@@ -68,9 +68,9 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
 
     budget_level = serializers.CharField(source='get_budget_level_display')
 
-    type_institutions = TypeInstitutionSerializer()
+    type_institution = TypeInstitutionSerializer()
 
-    type_organizations = TypeOrganizationSerializer()
+    type_organization = TypeOrganizationSerializer()
 
     status_egrul = StatusEGRULSerializer()
 
