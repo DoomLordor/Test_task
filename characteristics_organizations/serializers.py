@@ -55,12 +55,12 @@ class HeadByBKSerializer(serializers.ModelSerializer):
     def is_valid(self, raise_exception=False):
         if super().is_valid(raise_exception):
 
-            if not self.validated_data['code_head_by_bk'].isdigit():
-                self._errors = {'code_head_by_bk': 'Код главы по БК сотстоит не из цифр'}
-            elif not self._errors and len(self.validated_data['code_head_by_bk']) != 3:
-                self._errors = {'code_head_by_bk': 'Код главы по БК не верной длины'}
+            massage = check_code(self.validated_data['code_head_by_bk'], 9)
+            if massage:
+                self._errors = {'code_head_by_bk': massage}
+                return False
 
-            return not bool(self._errors)
+            return True
         else:
             return False
 
@@ -88,17 +88,19 @@ class CharacteristicsOrganizationSerializerFromList(serializers.ModelSerializer)
     def is_valid(self, raise_exception=False):
         if super().is_valid(raise_exception):
 
-            error = check_INN(self.validated_data['inn'])
+            massage = check_code(self.validated_data['inn'], 10)
 
-            if error:
-                self._errors = error
+            if massage:
+                self._errors = {'inn': massage}
                 return False
 
-            error = check_KPP(self.validated_data['kpp'])
+            massage = check_code(self.validated_data['kpp'], 9)
 
-            if error:
-                self._errors = error
+            if massage:
+                self._errors = {'kpp': massage}
                 return False
+
+            return True
         else:
             return False
 
@@ -108,16 +110,15 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
         model = CharacteristicsOrganization
         fields = '__all__'
 
-def check_INN(INN):
-    if len(INN) != 10:
-        return {'inn': 'Не верная длина ИНН организации'}
-    elif not INN.isdigit():
-        return {'inn': 'ИНН состоит не из цифр'}
-    return {}
+def check_code(code, len_code):
+    """Проверка на соответствие кода указанной длине и состоит ли код из цифр"""
+    if type(code) is not str:
+        raise TypeError('code is not string')
+    if type(len_code) is not int:
+        raise TypeError('len_code is not integer')
 
-def check_KPP(KPP):
-    if len(KPP) != 10:
-        return {'kpp': 'Не верная длина КПП организации'}
-    elif not KPP.isdigit():
-        return {'kpp': 'Кпп состоит не из цифр'}
-    return {}
+    if len(code) != len_code:
+        return 'Не верная длина'
+    elif not code.isdigit():
+        return 'Состоит не из цифр'
+    return ''
