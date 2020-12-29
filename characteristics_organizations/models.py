@@ -9,7 +9,7 @@ from django.db import models
 
 
 class TypeInstitution(models.Model):
-    """Типов учреждения и ссылка на внешний id для связи с соответствующим источником типа"""
+    """Тип учреждения и ссылка на внешний id для связи с соответствующим источником типа"""
 
     outside_id = models.IntegerField('outside_id')
     name_type = models.TextField('Тип учреждения')
@@ -18,7 +18,7 @@ class TypeInstitution(models.Model):
         managed = True
         db_table = 'type_institutions_manual'
         unique_together = ('id', 'outside_id', 'name_type')
-        verbose_name = 'Наименование типа учреждения'
+        verbose_name = 'Тип учреждения'
 
 
 class TypeOrganization(models.Model):
@@ -30,7 +30,7 @@ class TypeOrganization(models.Model):
         managed = True
         db_table = 'type_organizations_manual'
         unique_together = ('id', 'outside_id', 'name_type')
-        verbose_name = 'Наименование типа организации'
+        verbose_name = 'Тип организации'
 
 
 class StatusEGRUL(models.Model):
@@ -42,7 +42,7 @@ class StatusEGRUL(models.Model):
         managed = True
         db_table = 'status_egrul_manual'
         unique_together = ('id', 'outside_id', 'name_status')
-        verbose_name = 'Наименование статуса ЕГРЮЛ'
+        verbose_name = 'Статус ЕГРЮЛ'
 
 
 class StatusRYBPNYBP(models.Model):
@@ -54,7 +54,7 @@ class StatusRYBPNYBP(models.Model):
         managed = True
         db_table = 'status_rybpnybp_manual'
         unique_together = ('id', 'outside_id', 'name_status')
-        verbose_name = 'Наименование статуса РУБПНУБП'
+        verbose_name = 'Статус РУБПНУБП'
 
 
 class IndustrySpecificTyping(models.Model):
@@ -65,7 +65,7 @@ class IndustrySpecificTyping(models.Model):
         managed = True
         db_table = 'industry_specific_typing_manual'
         unique_together = ('id', 'name_typing')
-        verbose_name = 'Наименование отраслевой типизации'
+        verbose_name = 'Отраслевой типизации'
 
 
 class BudgetLevel(models.IntegerChoices):

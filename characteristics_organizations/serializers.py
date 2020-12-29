@@ -64,7 +64,8 @@ class HeadByBKSerializer(serializers.ModelSerializer):
         else:
             return False
 
-class CharacteristicsOrganizationSerializerFromList(serializers.ModelSerializer):
+
+class AdvancedCharacteristicsOrganizationSerializer(serializers.ModelSerializer):
     """Сериализатор характеристик организации"""
 
     budget_level = serializers.CharField(source='get_budget_level_display')
@@ -104,11 +105,12 @@ class CharacteristicsOrganizationSerializerFromList(serializers.ModelSerializer)
         else:
             return False
 
-class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
 
+class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CharacteristicsOrganization
         fields = '__all__'
+
 
 def check_code(code, len_code):
     """Проверка на соответствие кода указанной длине и состоит ли код из цифр"""
