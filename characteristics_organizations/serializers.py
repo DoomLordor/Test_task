@@ -55,7 +55,7 @@ class HeadByBKSerializer(serializers.ModelSerializer):
     def is_valid(self, raise_exception=False):
         if super().is_valid(raise_exception):
 
-            massage = check_code(self.validated_data['code_head_by_bk'], 9)
+            massage = check_code(self.validated_data['code_head_by_bk'], 3)
             if massage:
                 self._errors = {'code_head_by_bk': massage}
                 return False
