@@ -17,6 +17,8 @@ COMPARISON = {'GET': 'view', 'POST': 'add', 'PUT': 'change', 'PATCH': 'CHANGE', 
 
 class PaginationData(PageNumberPagination):
     page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 # filters
@@ -156,18 +158,9 @@ class IndustrySpecificTypingPermission(permissions.BasePermission):
 # REST
 class ModifiedModelViewSet(viewsets.ModelViewSet):
 
-    def list(self, request, *args, **kwargs):
-        if request.GET.get('paginate') is not None:
-            self.pagination_class.page_size = request.GET.get('paginate')
-            response = super().list(request, *args, **kwargs)
-            self.pagination_class.page_size = 10
-            return response
-        else:
-            return super().list(request, *args, **kwargs)
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             return super().create(request, *args, **kwargs)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -177,7 +170,7 @@ class ModifiedModelViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
 
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             return super().update(request, *args, **kwargs)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

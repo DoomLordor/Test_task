@@ -86,6 +86,12 @@ class AdvancedCharacteristicsOrganizationSerializer(serializers.ModelSerializer)
         model = CharacteristicsOrganization
         fields = '__all__'
 
+
+class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CharacteristicsOrganization
+        fields = '__all__'
+
     def is_valid(self, raise_exception=False):
         if super().is_valid(raise_exception):
 
@@ -104,12 +110,6 @@ class AdvancedCharacteristicsOrganizationSerializer(serializers.ModelSerializer)
             return True
         else:
             return False
-
-
-class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CharacteristicsOrganization
-        fields = '__all__'
 
 
 def check_code(code, len_code):
