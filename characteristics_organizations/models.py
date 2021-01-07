@@ -65,7 +65,7 @@ class IndustrySpecificTyping(models.Model):
         managed = True
         db_table = 'industry_specific_typing_manual'
         unique_together = ('id', 'name_typing')
-        verbose_name = 'Отраслевой типизации'
+        verbose_name = 'Отраслевая типизация'
 
 
 class BudgetLevel(models.IntegerChoices):
