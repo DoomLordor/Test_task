@@ -1,5 +1,4 @@
-from rest_framework.response import Response
-from rest_framework import viewsets, permissions, status, serializers
+from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
 
 from django_filters import rest_framework as filters
@@ -156,27 +155,7 @@ class IndustrySpecificTypingPermission(permissions.BasePermission):
 # Permissions
 
 # REST
-class ModifiedModelViewSet(viewsets.ModelViewSet):
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            return super().create(request, *args, **kwargs)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-
-        if serializer.is_valid():
-            return super().update(request, *args, **kwargs)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class CharacteristicsOrganizationRest(ModifiedModelViewSet):
+class CharacteristicsOrganizationRest(viewsets.ModelViewSet):
     queryset = CharacteristicsOrganization.objects.all()
     serializer_class = sr.CharacteristicsOrganizationSerializer
     pagination_class = PaginationData
@@ -190,7 +169,7 @@ class CharacteristicsOrganizationRest(ModifiedModelViewSet):
         return sr.AdvancedCharacteristicsOrganizationSerializer
 
 
-class HeadByBKRest(ModifiedModelViewSet):
+class HeadByBKRest(viewsets.ModelViewSet):
     queryset = HeadByBK.objects.all()
     serializer_class = sr.HeadByBKSerializer
     pagination_class = PaginationData
@@ -199,7 +178,7 @@ class HeadByBKRest(ModifiedModelViewSet):
     permission_classes = (HeadByBKPermission,)
 
 
-class TypeInstitutionRest(ModifiedModelViewSet):
+class TypeInstitutionRest(viewsets.ModelViewSet):
     queryset = TypeInstitution.objects.all()
     serializer_class = sr.TypeInstitutionSerializer
     pagination_class = PaginationData
@@ -208,7 +187,7 @@ class TypeInstitutionRest(ModifiedModelViewSet):
     permission_classes = (HeadByBKPermission,)
 
 
-class TypeOrganizationRest(ModifiedModelViewSet):
+class TypeOrganizationRest(viewsets.ModelViewSet):
     queryset = TypeOrganization.objects.all()
     serializer_class = sr.TypeOrganizationSerializer
     pagination_class = PaginationData
@@ -217,7 +196,7 @@ class TypeOrganizationRest(ModifiedModelViewSet):
     permission_classes = (TypeOrganizationPermission,)
 
 
-class StatusEGRULRest(ModifiedModelViewSet):
+class StatusEGRULRest(viewsets.ModelViewSet):
     queryset = StatusEGRUL.objects.all()
     serializer_class = sr.StatusEGRULSerializer
     pagination_class = PaginationData
@@ -226,7 +205,7 @@ class StatusEGRULRest(ModifiedModelViewSet):
     permission_classes = (StatusEGRULPermission,)
 
 
-class StatusRYBPNYBPRest(ModifiedModelViewSet):
+class StatusRYBPNYBPRest(viewsets.ModelViewSet):
     queryset = StatusRYBPNYBP.objects.all()
     serializer_class = sr.StatusRYBPNYBPSerializer
     pagination_class = PaginationData
@@ -235,7 +214,7 @@ class StatusRYBPNYBPRest(ModifiedModelViewSet):
     permission_classes = (StatusRYBPNYBPPermission,)
 
 
-class IndustrySpecificTypingRest(ModifiedModelViewSet):
+class IndustrySpecificTypingRest(viewsets.ModelViewSet):
     queryset = IndustrySpecificTyping.objects.all()
     serializer_class = sr.IndustrySpecificTypingSerializer
     pagination_class = PaginationData

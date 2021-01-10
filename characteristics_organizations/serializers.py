@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import (CharacteristicsOrganization, HeadByBK, TypeInstitution,
                      TypeOrganization, StatusEGRUL,
-                     StatusRYBPNYBP, IndustrySpecificTyping, BudgetLevel)
+                     StatusRYBPNYBP, IndustrySpecificTyping)
 
 
 class TypeInstitutionSerializer(serializers.ModelSerializer):
@@ -52,17 +52,11 @@ class HeadByBKSerializer(serializers.ModelSerializer):
         model = HeadByBK
         fields = '__all__'
 
-    def is_valid(self, raise_exception=False):
-        if super().is_valid(raise_exception):
-
-            massage = check_code(self.validated_data['code_head_by_bk'], 3)
-            if massage:
-                self._errors = {'code_head_by_bk': massage}
-                return False
-
-            return True
-        else:
-            return False
+    def validate_code_head_by_bk(self, code_head_by_bk):
+        massage = check_code(code_head_by_bk, 3)
+        if massage:
+            raise serializers.ValidationError(massage)
+        return code_head_by_bk
 
 
 class AdvancedCharacteristicsOrganizationSerializer(serializers.ModelSerializer):
@@ -92,24 +86,18 @@ class CharacteristicsOrganizationSerializer(serializers.ModelSerializer):
         model = CharacteristicsOrganization
         fields = '__all__'
 
-    def is_valid(self, raise_exception=False):
-        if super().is_valid(raise_exception):
+    def validate_inn(self, inn):
+        massage = check_code(inn, 10)
+        if massage:
+            raise serializers.ValidationError(massage)
+        return inn
 
-            massage = check_code(self.validated_data['inn'], 10)
+    def validate_kpp(self, kpp):
+        massage = check_code(kpp, 9)
 
-            if massage:
-                self._errors = {'inn': massage}
-                return False
-
-            massage = check_code(self.validated_data['kpp'], 9)
-
-            if massage:
-                self._errors = {'kpp': massage}
-                return False
-
-            return True
-        else:
-            return False
+        if massage:
+            raise serializers.ValidationError(massage)
+        return kpp
 
 
 def check_code(code, len_code):
